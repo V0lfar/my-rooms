@@ -354,48 +354,6 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       e.SetActive(false);
 
       // VIDEO HACK
-      const models = [
-        ['anubis', 10, [-1, -1]],
-        ['robot', 1, [-1, 1]],
-        ['buddha', 10, [1, -1]],
-        ['skull', 10, [1, 1]]
-      ];
-      for (let i = 0; i < models.length; ++i) {
-        const pos = new THREE.Vector3(models[i][2][0] * 50, 0, models[i][2][1 ] * 50);
-        {
-          const e = new entity.Entity();
-          e.AddComponent(new render_component.RenderComponent({
-            scene: this.params_.scene,
-            resourcePath: 'built-in.',
-            resourceName: 'box',
-            scale: new THREE.Vector3(20, 30, 20),
-            emissive: new THREE.Color(0x000000),
-            color: new THREE.Color(0x808080),
-          }));
-          e.AddComponent(new basic_rigid_body.BasicRigidBody({
-            // scene: this.params_.scene,
-            box: new THREE.Vector3(20, 30, 20),
-          }));
-    
-          this.Manager.Add(e);
-          e.SetPosition(pos);
-          e.SetActive(false);  
-        }
-
-        const e = new entity.Entity();
-        e.AddComponent(new render_component.RenderComponent({
-          scene: this.params_.scene,
-          resourcePath: './resources/models/' + models[i][0] + '/',
-          resourceName: 'scene.glb',
-          scale: new THREE.Vector3(models[i][1], models[i][1], models[i][1]),
-          emissive: new THREE.Color(0x000000),
-          color: new THREE.Color(0xFFFFFF),
-        }));
-
-        this.Manager.Add(e);
-        e.SetPosition(new THREE.Vector3(pos.x, pos.y + 15, pos.z));
-        e.SetActive(false);
-      }
 
       for (let x = -2; x <= 2; ++x) {
         for (let y = -2; y <= 2; ++y) {

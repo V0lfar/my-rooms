@@ -13,9 +13,6 @@ export const ui_controller = (() => {
       this.RegisterHandler_(
           'ui.charge', (m) => this.OnCharge_(m));
 
-      const messages = document.getElementById('top-left-ui-area');
-      messages.style.visibility = 'hidden';
-
       // VIDEO HACK
       // window.setTimeout(() => {
       //   messages.style.visibility = 'visible';
