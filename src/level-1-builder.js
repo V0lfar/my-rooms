@@ -1,12 +1,12 @@
-import {THREE} from './three-defs.js';
+import { THREE } from './three-defs.js';
 
-import {entity} from './entity.js';
+import { entity } from './entity.js';
 
-import {math} from './math.js';
+import { math } from './math.js';
 
-import {render_component} from './render-component.js';
-import {basic_rigid_body} from './basic-rigid-body.js';
-import {mesh_rigid_body} from './mesh-rigid-body.js';
+import { render_component } from './render-component.js';
+import { basic_rigid_body } from './basic-rigid-body.js';
+import { mesh_rigid_body } from './mesh-rigid-body.js';
 
 export const level_1_builder = (() => {
 
@@ -27,20 +27,26 @@ export const level_1_builder = (() => {
       albedo.wrapT = THREE.RepeatWrapping;
       albedo.encoding = THREE.sRGBEncoding;
 
-      const metalness = textureLoader.load('./resources/textures/' + metalnessName);
-      metalness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
-      metalness.wrapS = THREE.RepeatWrapping;
-      metalness.wrapT = THREE.RepeatWrapping;
+      if (metalnessName != null) {
+        const metalness = textureLoader.load('./resources/textures/' + metalnessName);
+        metalness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
+        metalness.wrapS = THREE.RepeatWrapping;
+        metalness.wrapT = THREE.RepeatWrapping;
+      }
 
-      const normal = textureLoader.load('./resources/textures/' + normalName);
-      normal.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
-      normal.wrapS = THREE.RepeatWrapping;
-      normal.wrapT = THREE.RepeatWrapping;
+      if (normalName != null) {
+        const normal = textureLoader.load('./resources/textures/' + normalName);
+        normal.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
+        normal.wrapS = THREE.RepeatWrapping;
+        normal.wrapT = THREE.RepeatWrapping;
+      }
 
-      const roughness = textureLoader.load('./resources/textures/' + roughnessName);
-      roughness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
-      roughness.wrapS = THREE.RepeatWrapping;
-      roughness.wrapT = THREE.RepeatWrapping;
+      if (roughnessName != null) {
+        const roughness = textureLoader.load('./resources/textures/' + roughnessName);
+        roughness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
+        roughness.wrapS = THREE.RepeatWrapping;
+        roughness.wrapT = THREE.RepeatWrapping;
+      }
 
       const material = new THREE.MeshStandardMaterial({
         map: albedo,
@@ -53,21 +59,21 @@ export const level_1_builder = (() => {
       // VIDEO HACK
       material.onBeforeCompile = (shader) => {
         shader.uniforms.iTime = { value: 0.0 };
-  
+
         shader.vertexShader = shader.vertexShader.replace('#include <common>',
-        `
+          `
         #include <common>
         varying vec4 vWorldPosition;
         varying vec3 vWorldNormal;
         `);
         shader.vertexShader = shader.vertexShader.replace('#include <fog_vertex>',
-        `
+          `
         #include <fog_vertex>
         vWorldPosition = worldPosition;
         vWorldNormal = inverseTransformDirection( transformedNormal, viewMatrix );
         `);
         shader.fragmentShader = shader.fragmentShader.replace('#include <common>',
-        `
+          `
         #include <common>
         varying vec4 vWorldPosition;
         varying vec3 vWorldNormal;
@@ -244,7 +250,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
         `);
         material.userData.shader = shader;
       };
-  
+
       material.customProgramCacheKey = () => {
         return albedo;
       };
@@ -266,56 +272,56 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       // plane.rotation.x = -Math.PI / 2;
       // this.scene_.add(plane);
       this.materials_.checkerboard = this.LoadMaterial_(
-          'whitesquare.png', null, null, null);
+        'whitesquare.png', null, null, null);
       this.materials_.vintageTile = this.LoadMaterial_(
-          'vintage-tile1_albedo.png', 'vintage-tile1_normal.png',
-          'vintage-tile1_roughness.png', 'vintage-tile1_metallic.png');
+        'vintage-tile1_albedo.png', 'vintage-tile1_normal.png',
+        'vintage-tile1_roughness.png', 'vintage-tile1_metallic.png');
       this.materials_.hexagonPavers = this.LoadMaterial_(
-          'hexagon-pavers1_albedo.png', 'hexagon-pavers1_normal.png',
-          'hexagon-pavers1_roughness.png', 'hexagon-pavers1_metallic.png');
+        'hexagon-pavers1_albedo.png', 'hexagon-pavers1_normal.png',
+        'hexagon-pavers1_roughness.png', 'hexagon-pavers1_metallic.png');
       this.materials_.dampDungeon = this.LoadMaterial_(
-          'damp-dungeon-floor_albedo.png', 'damp-dungeon-floor_normal.png',
-          'damp-dungeon-floor_roughness.png', 'damp-dungeon-floor_metallic.png');
+        'damp-dungeon-floor_albedo.png', 'damp-dungeon-floor_normal.png',
+        'damp-dungeon-floor_roughness.png', 'damp-dungeon-floor_metallic.png');
       this.materials_.rockSliced = this.LoadMaterial_(
-          'rock_sliced_albedo.png', 'rock_sliced_normal.png',
-          'rock_sliced_roughness.png', 'rock_sliced_metallic.png');
+        'rock_sliced_albedo.png', 'rock_sliced_normal.png',
+        'rock_sliced_roughness.png', 'rock_sliced_metallic.png');
       this.materials_.filthySpacePanels = this.LoadMaterial_(
-          'filthy-space-panels_albedo.png', 'filthy-space-panels_normal.png',
-          'filthy-space-panels_roughness.png', 'filthy-space-panels_metallic.png');
+        'filthy-space-panels_albedo.png', 'filthy-space-panels_normal.png',
+        'filthy-space-panels_roughness.png', 'filthy-space-panels_metallic.png');
       this.materials_.paintedWornAsphalt = this.LoadMaterial_(
-          'painted-worn-asphalt_albedo.png', 'painted-worn-asphalt_normal.png',
-          'painted-worn-asphalt_roughness.png', 'painted-worn-asphalt_metallic.png');
+        'painted-worn-asphalt_albedo.png', 'painted-worn-asphalt_normal.png',
+        'painted-worn-asphalt_roughness.png', 'painted-worn-asphalt_metallic.png');
       this.materials_.brokenDownConcrete2 = this.LoadMaterial_(
-          'broken_down_concrete2_albedo.png', 'broken_down_concrete2_normal.png',
-          'broken_down_concrete2_roughness.png', 'broken_down_concrete2_metallic.png');
+        'broken_down_concrete2_albedo.png', 'broken_down_concrete2_normal.png',
+        'broken_down_concrete2_roughness.png', 'broken_down_concrete2_metallic.png');
       this.materials_.stucco1 = this.LoadMaterial_(
-          'stucco1_albedo.png', 'stucco1_normal.png',
-          'stucco1_roughness.png', 'stucco1_metallic.png');
+        'stucco1_albedo.png', 'stucco1_normal.png',
+        'stucco1_roughness.png', 'stucco1_metallic.png');
 
       const ground = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1, 10, 10, 10),
-          this.materials_.checkerboard);
+        new THREE.BoxGeometry(1, 1, 1, 10, 10, 10),
+        this.materials_.checkerboard);
       ground.castShadow = true;
       ground.receiveShadow = true;
 
       this.FindEntity('loader').GetComponent('LoadController').AddModel(ground, 'built-in.', 'ground');
 
       const box = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1, 10, 10, 10),
-          this.materials_.checkerboard);
+        new THREE.BoxGeometry(1, 1, 1, 10, 10, 10),
+        this.materials_.checkerboard);
       box.castShadow = true;
       box.receiveShadow = true;
 
       this.FindEntity('loader').GetComponent('LoadController').AddModel(box, 'built-in.', 'box');
 
       const column = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1),
-          this.materials_.hexagonPavers);
+        new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1),
+        this.materials_.hexagonPavers);
       column.castShadow = true;
       column.receiveShadow = true;
 
       this.FindEntity('loader').GetComponent('LoadController').AddModel(column, 'built-in.', 'column');
-    
+
       this.currentTime_ = 0.0;
     }
 
@@ -370,7 +376,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             // scene: this.params_.scene,
             box: new THREE.Vector3(50, 20, 50)
           }));
-    
+
           this.Manager.Add(e);
           e.SetPosition(new THREE.Vector3(x * 50, math.rand_range(-30.0, -10.0), y * 50));
           e.SetActive(false);
@@ -394,7 +400,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             // scene: this.params_.scene,
             box: new THREE.Vector3(8, 10, 8),
           }));
-    
+
           this.Manager.Add(e, 'box.' + i + '.' + j);
           e.SetPosition(new THREE.Vector3(i * 20, 1, j * 20));
           e.SetActive(false);
@@ -414,7 +420,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       //     // scene: this.params_.scene,
       //     box: new THREE.Vector3(10, 10, 10),
       //   }));
-  
+
       //   this.Manager.Add(e);
       //   e.SetPosition(new THREE.Vector3(0, 3, -20));
       //   e.SetActive(false);
@@ -435,7 +441,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       //     // scene: this.params_.scene,
       //     box: new THREE.Vector3(100, 10, 100)
       //   }));
-  
+
       //   this.Manager.Add(e);
       //   e.SetPosition(new THREE.Vector3(walls[i][0] * 100, 3, walls[i][1] * 100));
       //   e.SetActive(false);
@@ -479,7 +485,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
       //     box: new THREE.Vector3(10, 10, 10)
       //   }));
-  
+
       //   this.Manager.Add(e, 'box.11');
       //   e.SetPosition(new THREE.Vector3(0, 5, -20));
       //   e.SetActive(false);
