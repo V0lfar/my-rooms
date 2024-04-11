@@ -322,9 +322,11 @@ export const threejs_component = (() => {
       // VIDEO HACK
       this.bloomPass_.render(this.threejs_, this.writeBuffer_, this.readBuffer_, timeElapsedS, false);
       this.uiPass_.render(this.threejs_, this.writeBuffer_, this.readBuffer_, timeElapsedS, false);
-
+      
       this.radialBlur_.uniforms.center.value.set(window.innerWidth * 0.5, window.innerHeight * 0.5);
       this.radialBlur_.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+      this.radialBlur_.uniforms.strength.value = 0;
+
       // VIDEO HACK
       this.radialBlur_.render(this.threejs_, this.writeBuffer_, this.readBuffer_, timeElapsedS, false);
       this.swapBuffers_();

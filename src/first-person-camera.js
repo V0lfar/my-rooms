@@ -158,30 +158,7 @@ export const first_person_camera = (() => {
     }
 
     updatePower_(timeElapsedS) {
-      if (this.power_) {
-        this.powerTime_ -= timeElapsedS / POWER_TIME;
-        if (this.powerTime_ < 0) {
-          this.power_ = false;
-        }
-      } else {
-        this.powerTime_ += timeElapsedS / POWER_RECHARGE;
-        this.powerTime_ = math.sat(this.powerTime_);  
-      }
-
-      this.FindEntity('ui').Broadcast(
-          {topic: 'ui.charge', value: this.powerTime_})
-
-      const power = this.power_;
-
-      const threejs = this.FindEntity('threejs').GetComponent('ThreeJSController');
-
-      threejs.radialBlur_.uniforms.strength.value = math.lerp(
-          timeElapsedS * 5.0, threejs.radialBlur_.uniforms.strength.value, power ? 0.5 : 0);
-      if (threejs.radialBlur_.uniforms.strength.value < 0.001 && !power) {
-        threejs.radialBlur_.uniforms.strength.value = 0;
-      }
-      this.walkSpeed_ = power ? 30 : 10;
-      this.Parent.Attributes.Physics.CharacterController.setJumpMultiplier(power ? 2.25 : 1);
+      this.walkSpeed_ = this.power_ ? 30 : 10;
     }
   
     updateRotation_(timeElapsedS) {
