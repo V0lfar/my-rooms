@@ -9,9 +9,6 @@ import {passes} from './passes.js';
 
 export const first_person_camera = (() => {
 
-  const POWER_TIME = 5;
-  const POWER_RECHARGE = 10;
-
   class FirstPersonCamera extends entity.Component {
     constructor(params) {
       super();
