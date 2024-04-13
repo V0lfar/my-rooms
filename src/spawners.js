@@ -49,42 +49,8 @@ export const spawners = (() => {
     }
   };
 
-  class TargetSpawner extends entity.Component {
-    constructor(params) {
-      super();
-      this.params_ = params;
-    }
-
-    Spawn(params) {
-      const e = new entity.Entity();
-      e.AddComponent(new target_entity.TargetCharacterController({
-        scene: this.params_.scene,
-        model: {
-          path: './resources/quaternius/Enemies/',
-          name: 'Enemy_Large_Gun.glb',
-          scale: 2,
-        },
-      }));
-      // e.AddComponent(new basic_rigid_body.CharacterRigidBody({
-      //   // scene: params.scene,
-      //   box: new THREE.Vector3(2, 2, 2),
-      // }));
-      e.AddComponent(new kinematic_character_controller.KinematicCharacterController(this.params_));
-      // VIDEO HACK
-      // e.AddComponent(new attack_controller.AttackController({scene: this.params_.scene, timing: 0.25}));
-      e.AddComponent(new health_component.HealthComponent({health: 100, maxHealth: 100}));
-
-      this.Manager.Add(e);
-      e.SetPosition(params.position);
-      e.SetActive(true);
-
-      return e;
-    }
-  };
-
   return {
     PlayerSpawner: PlayerSpawner,
     Level1Spawner: Level1Spawner,
-    TargetSpawner: TargetSpawner,
   };
 })();

@@ -341,71 +341,37 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
 
       this.BuildHackModel_();
 
+      // VIDEO HACK
+
       const e = new entity.Entity();
       e.AddComponent(new render_component.RenderComponent({
         scene: this.params_.scene,
         resourcePath: 'built-in.',
         resourceName: 'ground',
-        scale: new THREE.Vector3(100, 20, 100),
+        scale: new THREE.Vector3(150, 3, 150),
         emissive: new THREE.Color(0x000000),
         color: new THREE.Color(0xFFFFFF),
       }));
       e.AddComponent(new basic_rigid_body.BasicRigidBody({
-        // scene: this.params_.scene,
-        box: new THREE.Vector3(100, 20, 100)
+        box: new THREE.Vector3(150, 3, 150)
       }));
 
-      this.Manager.Add(e, 'ground');
-      e.SetPosition(new THREE.Vector3(0, -12, 0));
+      this.Manager.Add(e);
+      e.SetPosition(new THREE.Vector3(0, -10, 0));
       e.SetActive(false);
 
-      // VIDEO HACK
-
-      for (let x = -2; x <= 2; ++x) {
-        for (let y = -2; y <= 2; ++y) {
-          const e = new entity.Entity();
-          e.AddComponent(new render_component.RenderComponent({
-            scene: this.params_.scene,
-            resourcePath: 'built-in.',
-            resourceName: 'ground',
-            scale: new THREE.Vector3(50, 20, 50),
-            emissive: new THREE.Color(0x000000),
-            color: new THREE.Color(0xFFFFFF),
-          }));
-          e.AddComponent(new basic_rigid_body.BasicRigidBody({
-            // scene: this.params_.scene,
-            box: new THREE.Vector3(50, 20, 50)
-          }));
-
-          this.Manager.Add(e);
-          e.SetPosition(new THREE.Vector3(x * 50, math.rand_range(-30.0, -10.0), y * 50));
-          e.SetActive(false);
-        }
+      const walls = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+      for (let i = 0; i < walls.length; ++i) {
+         const e = new entity.Entity();
+         e.AddComponent(new basic_rigid_body.BasicRigidBody({
+           box: new THREE.Vector3(150, 20, 150)
+         }));
+         this.Manager.Add(e);
+         e.SetPosition(new THREE.Vector3(walls[i][0] * 150, 0, walls[i][1] * 150));
+         e.SetActive(false);
       }
-      for (let i = -3; i <= 3; ++i) {
-        for (let j = -3; j <= 3; ++j) {
-          if (i == 0 && j == 0) {
-            continue;
-          }
-          const e = new entity.Entity();
-          e.AddComponent(new render_component.RenderComponent({
-            scene: this.params_.scene,
-            resourcePath: 'built-in.',
-            resourceName: 'box',
-            scale: new THREE.Vector3(8, 10, 8),
-            emissive: new THREE.Color(0x000000),
-            color: new THREE.Color(0xFFFFFF),
-          }));
-          e.AddComponent(new basic_rigid_body.BasicRigidBody({
-            // scene: this.params_.scene,
-            box: new THREE.Vector3(8, 10, 8),
-          }));
 
-          this.Manager.Add(e, 'box.' + i + '.' + j);
-          e.SetPosition(new THREE.Vector3(i * 20, 1, j * 20));
-          e.SetActive(false);
-        }
-      }
+
       // {
       //   const e = new entity.Entity();
       //   e.AddComponent(new render_component.RenderComponent({
@@ -446,31 +412,6 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       //   e.SetPosition(new THREE.Vector3(walls[i][0] * 100, 3, walls[i][1] * 100));
       //   e.SetActive(false);
       // }
-
-      this.FindEntity('spawners').GetComponent('TargetSpawner').Spawn({
-        scene: this.params_.scene,
-        position: new THREE.Vector3(0, 2, 5)
-      });
-
-      // this.FindEntity('spawners').GetComponent('TargetSpawner').Spawn({
-      //   scene: this.params_.scene,
-      //   position: new THREE.Vector3(-100, 50, -100)
-      // });
-
-      // this.FindEntity('spawners').GetComponent('TargetSpawner').Spawn({
-      //   scene: this.params_.scene,
-      //   position: new THREE.Vector3(-100, 50, -5)
-      // });
-
-      // this.FindEntity('spawners').GetComponent('TargetSpawner').Spawn({
-      //   scene: this.params_.scene,
-      //   position: new THREE.Vector3(-50, 50, -50)
-      // });
-
-      // this.FindEntity('spawners').GetComponent('TargetSpawner').Spawn({
-      //   scene: this.params_.scene,
-      //   position: new THREE.Vector3(-50, 50, 50)
-      // });
 
       // {
       //   const e = new entity.Entity();
