@@ -6,9 +6,6 @@ import {player_input} from './player-input.js';
 import {first_person_camera} from './first-person-camera.js';
 import {kinematic_character_controller} from './kinematic-character-controller.js';
 import {level_1_builder} from './level-1-builder.js';
-import {health_component} from './health-component.js';
-import {target_entity} from './target-controller.js';
-
 
 export const spawners = (() => {
 
@@ -24,7 +21,6 @@ export const spawners = (() => {
       player.AddComponent(new player_input.PlayerInput(this.params_));
       player.AddComponent(new first_person_camera.FirstPersonCamera(this.params_));
       player.AddComponent(new kinematic_character_controller.KinematicCharacterController(this.params_));
-      player.AddComponent(new health_component.HealthComponent({health: 100, maxHealth: 100, updateUI: true}));
 
       this.Manager.Add(player, 'player');
 
