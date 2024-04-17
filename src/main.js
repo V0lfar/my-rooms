@@ -8,8 +8,6 @@ import {spatial_hash_grid} from './spatial-hash-grid.js';
 import {threejs_component} from './threejs-component.js';
 import {ammojs_component} from './ammojs-component.js';
 import {blaster} from './fx/blaster.js';
-import {ui_controller} from './ui-controller.js';
-
 
 class QuickFPS1 {
   constructor() {
@@ -60,10 +58,6 @@ class QuickFPS1 {
     l.AddComponent(new load_controller.LoadController());
     this.entityManager_.Add(l, 'loader');
 
-    const u = new entity.Entity();
-    u.AddComponent(new ui_controller.UIController());
-    this.entityManager_.Add(u, 'ui');
-
     const basicParams = {
       grid: this.grid_,
       scene: this.scene_,
@@ -74,7 +68,6 @@ class QuickFPS1 {
     const spawner = new entity.Entity();
     spawner.AddComponent(new spawners.PlayerSpawner(basicParams));
     spawner.AddComponent(new spawners.Level1Spawner(basicParams));
-    spawner.AddComponent(new spawners.TargetSpawner(basicParams));
     this.entityManager_.Add(spawner, 'spawners');
 
     spawner.GetComponent('PlayerSpawner').Spawn();

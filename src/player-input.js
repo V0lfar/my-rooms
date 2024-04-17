@@ -54,15 +54,23 @@ export const player_input = (() => {
     }
 
     onMouseMove_(e) {
-      this.current_.mouseX = e.pageX - window.innerWidth / 2;
-      this.current_.mouseY = e.pageY - window.innerHeight / 2;
-
+      const newMouseX = e.pageX - window.innerWidth / 2;
+      const newMouseY = e.pageY - window.innerHeight / 2;
+    
       if (this.previous_ === null) {
         this.previous_ = {...this.current_};
       }
-
-      this.current_.mouseXDelta = this.current_.mouseX - this.previous_.mouseX;
-      this.current_.mouseYDelta = this.current_.mouseY - this.previous_.mouseY;
+    
+      if (this.current_.leftButton) {
+        this.current_.mouseXDelta = newMouseX - this.previous_.mouseX;
+        this.current_.mouseYDelta = newMouseY - this.previous_.mouseY;
+      } else {
+        this.current_.mouseXDelta = 0;
+        this.current_.mouseYDelta = 0;
+      }
+    
+      this.current_.mouseX = newMouseX;
+      this.current_.mouseY = newMouseY;
     }
 
     onMouseDown_(e) {
@@ -116,13 +124,18 @@ export const player_input = (() => {
     }
 
     Update(_) {
-      if (this.previous_ !== null) {
+      if (this.previous_ == null) {
+        return;
+      }
+      if (this.current_.leftButton) {
         this.current_.mouseXDelta = this.current_.mouseX - this.previous_.mouseX;
         this.current_.mouseYDelta = this.current_.mouseY - this.previous_.mouseY;
-
-        this.previous_ = {...this.current_};
-        this.previousKeys_ = {...this.keys_};
+      } else {
+        this.current_.mouseXDelta = 0;
+        this.current_.mouseYDelta = 0;
       }
+      this.previous_ = {...this.current_};
+      this.previousKeys_ = {...this.keys_};
     }
   };
 
