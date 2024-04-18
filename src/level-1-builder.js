@@ -8,6 +8,8 @@ import { render_component } from './render-component.js';
 import { basic_rigid_body } from './basic-rigid-body.js';
 import { mesh_rigid_body } from './mesh-rigid-body.js';
 
+import { getDocument } from '../node_modules/pdfjs-dist/build/pdf.mjs';
+
 export const level_1_builder = (() => {
 
   class Level1Builder extends entity.Component {
@@ -371,7 +373,29 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
          e.SetActive(false);
       }
 
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
+      loadPDF('./resources/pdf/sample.pdf').then((canvas) => {
+        const pdfMesh = createPDFMesh(canvas);
+      
+        this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh');
+      
+        const pdfEntity = new entity.Entity();
+        pdfEntity.AddComponent(new render_component.RenderComponent({
+          scene: this.params_.scene,
+          resourcePath: 'built-in.',
+          resourceName: 'pdfMesh',
+          scale: new THREE.Vector3(8, 11, 0),
+
+        }));
+
+        console.log(pdfMesh)
+
+        this.Manager.Add(pdfEntity);
+        pdfEntity.SetPosition(new THREE.Vector3(0, -2, -20));
+        pdfEntity.SetActive(false);
+      });
+      
       // {
       //   const e = new entity.Entity();
       //   e.AddComponent(new render_component.RenderComponent({
@@ -435,6 +459,39 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       // this.spawned_.push(e);
     }
   };
+
+  function loadPDF(url) {
+    return getDocument(url).promise.then((pdf) => {
+      return pdf.getPage(1).then((page) => {
+        const viewport = page.getViewport({ scale: 1.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const context = canvas.getContext('2d');
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        return page.render(renderContext).promise.then(() => canvas);
+      });
+    });
+  }
+
+  function createPDFMesh(canvas) {
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.encoding = THREE.sRGBEncoding;
+    texture.minFilter = THREE.LinearFilter;
+    console.log(texture)
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    material.side = THREE.DoubleSide;
+    console.log(material)
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  }
+
 
   return {
     Level1Builder: Level1Builder
