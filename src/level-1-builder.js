@@ -385,14 +385,14 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
           scene: this.params_.scene,
           resourcePath: 'built-in.',
           resourceName: 'pdfMesh',
-          scale: new THREE.Vector3(8, 11, 0),
+          scale: new THREE.Vector3(1.836 * 3, 2.376 * 3, 0),
 
         }));
 
         console.log(pdfMesh)
 
         this.Manager.Add(pdfEntity);
-        pdfEntity.SetPosition(new THREE.Vector3(0, -2, -20));
+        pdfEntity.SetPosition(new THREE.Vector3(0, -4.5, -20));
         pdfEntity.SetActive(false);
       });
       
@@ -463,7 +463,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
   function loadPDF(url) {
     return getDocument(url).promise.then((pdf) => {
       return pdf.getPage(1).then((page) => {
-        const viewport = page.getViewport({ scale: 1.0 });
+        const viewport = page.getViewport({ scale: 3.0 });
         const canvas = document.createElement('canvas');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
