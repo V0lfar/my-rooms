@@ -374,94 +374,33 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       }
 
       pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
-
-      loadPDF('./resources/pdf/sample.pdf').then((canvas) => {
-        const pdfMesh = createPDFMesh(canvas);
-      
-        this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh');
-      
-        const pdfEntity = new entity.Entity();
-        pdfEntity.AddComponent(new render_component.RenderComponent({
-          scene: this.params_.scene,
-          resourcePath: 'built-in.',
-          resourceName: 'pdfMesh',
-          scale: new THREE.Vector3(1.836 * 3, 2.376 * 3, 0),
-
-        }));
-
-        console.log(pdfMesh)
-
-        this.Manager.Add(pdfEntity);
-        pdfEntity.SetPosition(new THREE.Vector3(0, -4.5, -20));
-        pdfEntity.SetActive(false);
-      });
-      
-      // {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'box',
-      //     scale: new THREE.Vector3(10, 10, 10),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     // scene: this.params_.scene,
-      //     box: new THREE.Vector3(10, 10, 10),
-      //   }));
-
-      //   this.Manager.Add(e);
-      //   e.SetPosition(new THREE.Vector3(0, 3, -20));
-      //   e.SetActive(false);
-      // }
-
-      // const walls = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-      // for (let i = 0; i < walls.length; ++i) {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'ground',
-      //     scale: new THREE.Vector3(100, 10, 100),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     // scene: this.params_.scene,
-      //     box: new THREE.Vector3(100, 10, 100)
-      //   }));
-
-      //   this.Manager.Add(e);
-      //   e.SetPosition(new THREE.Vector3(walls[i][0] * 100, 3, walls[i][1] * 100));
-      //   e.SetActive(false);
-      // }
-
-      // {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'box',
-      //     scale: new THREE.Vector3(10, 10, 10),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     box: new THREE.Vector3(10, 10, 10)
-      //   }));
-
-      //   this.Manager.Add(e, 'box.11');
-      //   e.SetPosition(new THREE.Vector3(0, 5, -20));
-      //   e.SetActive(false);
-      // }
-
-      // this.spawned_.push(e);
+      const pdfs = ['sample.pdf', 'sample2.pdf', 'sample3.pdf'];
+      for (let i = 0; i < pdfs.length; ++i) {
+        loadPDF(pdfs[i]).then((canvas) => {
+        
+          const pdfMesh = createPDFMesh(canvas);
+          this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
+  
+          const pdfEntity = new entity.Entity();
+          pdfEntity.AddComponent(new render_component.RenderComponent({
+            scene: this.params_.scene,
+            resourcePath: 'built-in.',
+            resourceName: 'pdfMesh' + '_' + i,
+            scale: new THREE.Vector3(canvas.width / 1000 * 3, canvas.height / 1000 * 3, 0),
+          }));
+  
+          this.Manager.Add(pdfEntity);
+          var position = 150 * 0.75 / pdfs.length
+          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -4.5, -70));
+          pdfEntity.SetActive(false);
+        });
+     }
     }
   };
 
-  function loadPDF(url) {
-    return getDocument(url).promise.then((pdf) => {
+  function loadPDF(name) {
+    const basePath = './resources/pdf/'
+    return getDocument(basePath + name).promise.then((pdf) => {
       return pdf.getPage(1).then((page) => {
         const viewport = page.getViewport({ scale: 3.0 });
         const canvas = document.createElement('canvas');
@@ -477,14 +416,13 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     });
   }
 
+
   function createPDFMesh(canvas) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.encoding = THREE.sRGBEncoding;
     texture.minFilter = THREE.LinearFilter;
-    console.log(texture)
     const material = new THREE.MeshBasicMaterial({ map: texture });
     material.side = THREE.DoubleSide;
-    console.log(material)
     const geometry = new THREE.PlaneGeometry(1, 1);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;

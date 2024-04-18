@@ -1,6 +1,6 @@
 import {entity} from "./entity.js";
 import {passes} from './passes.js';
-
+import {THREE} from './three-defs.js';
 
 export const player_input = (() => {
 
