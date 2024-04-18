@@ -14,6 +14,8 @@ export const player_input = (() => {
     'CTRL_L': 17,
   };
 
+  const raycaster = new THREE.Raycaster();
+
   class PlayerInput extends entity.Component {
     constructor(params) {
       super();
@@ -38,6 +40,7 @@ export const player_input = (() => {
       this.target_.addEventListener('mouseup', (e) => this.onMouseUp_(e), false);
       this.target_.addEventListener('keydown', (e) => this.onKeyDown_(e), false);
       this.target_.addEventListener('keyup', (e) => this.onKeyUp_(e), false);
+      this.target_.addEventListener('click', (e) => this.onDocumentClick_(e), false);
 
       this.Parent.Attributes.Input = {
         Keyboard: {
@@ -51,6 +54,27 @@ export const player_input = (() => {
       };
 
       this.SetPass(passes.INPUT);
+
+    }
+
+    onDocumentClick_(event) {
+      // Calculate mouse position in normalized device coordinates (-1 to +1)
+      const mouse = new THREE.Vector2();
+
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+      // Update the picking ray with the camera and mouse position
+      const camera = this.FindEntity('threejs').GetComponent('ThreeJSController').getCamera()
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Calculate objects intersecting the picking ray
+      const intersects = raycaster.intersectObjects(this.params_.scene.children);
+    
+      // Check if the PDF mesh is intersected
+      for (let i = 0; i < intersects.length; i++) {
+        console.log(intersects[i].object)
+      }
     }
 
     onMouseMove_(e) {
