@@ -378,7 +378,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       for (let i = 0; i < pdfs.length; ++i) {
         loadPDF(pdfs[i]).then((canvas) => {
         
-          const pdfMesh = createPDFMesh(canvas);
+          const pdfMesh = createPDFMesh(canvas, pdfs[i]);
           this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
   
           const pdfEntity = new entity.Entity();
@@ -386,7 +386,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             scene: this.params_.scene,
             resourcePath: 'built-in.',
             resourceName: 'pdfMesh' + '_' + i,
-            scale: new THREE.Vector3(canvas.width / 1000 * 3, canvas.height / 1000 * 3, 0),
+            scale: new THREE.Vector3(canvas.width / 1000 * 3, canvas.height / 1000 * 3, 1),
           }));
   
           this.Manager.Add(pdfEntity);
@@ -417,14 +417,16 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
   }
 
 
-  function createPDFMesh(canvas) {
+  function createPDFMesh(canvas, name) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.encoding = THREE.sRGBEncoding;
     texture.minFilter = THREE.LinearFilter;
     const material = new THREE.MeshBasicMaterial({ map: texture });
     material.side = THREE.DoubleSide;
     const geometry = new THREE.PlaneGeometry(1, 1);
+    const basePath = './resources/pdf/'
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.userData.pdfUrl = basePath + name;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     return mesh;
