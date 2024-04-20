@@ -1,6 +1,6 @@
 import {entity} from "./entity.js";
 import {passes} from './passes.js';
-
+import {THREE} from './three-defs.js';
 
 export const player_input = (() => {
 
@@ -13,6 +13,8 @@ export const player_input = (() => {
     'SHIFT_L': 16,
     'CTRL_L': 17,
   };
+
+  const raycaster = new THREE.Raycaster();
 
   class PlayerInput extends entity.Component {
     constructor(params) {
@@ -38,6 +40,7 @@ export const player_input = (() => {
       this.target_.addEventListener('mouseup', (e) => this.onMouseUp_(e), false);
       this.target_.addEventListener('keydown', (e) => this.onKeyDown_(e), false);
       this.target_.addEventListener('keyup', (e) => this.onKeyUp_(e), false);
+      this.target_.addEventListener('dblclick', (e) => this.onDocumentDoubleClick_(e), false);
 
       this.Parent.Attributes.Input = {
         Keyboard: {
@@ -51,6 +54,32 @@ export const player_input = (() => {
       };
 
       this.SetPass(passes.INPUT);
+
+    }
+
+    onDocumentDoubleClick_(event) {
+      // Calculate mouse position in normalized device coordinates (-1 to +1)
+      const mouse = new THREE.Vector2();
+
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+      // Update the picking ray with the camera and mouse position
+      const camera = this.FindEntity('threejs').GetComponent('ThreeJSController').getCamera()
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Calculate objects intersecting the picking ray
+      const intersects = raycaster.intersectObjects(this.params_.scene.children, true);
+      //this.params_.scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000) );
+
+      // Check if the PDF mesh is intersected
+      for (let i = 0; i < intersects.length; i++) {
+        //console.log(intersects[i].object)
+        if (intersects[i].object.userData.pdfUrl) {
+          window.open(intersects[i].object.userData.pdfUrl);
+          break;
+        }
+      }
     }
 
     onMouseMove_(e) {

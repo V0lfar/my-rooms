@@ -8,6 +8,8 @@ import { render_component } from './render-component.js';
 import { basic_rigid_body } from './basic-rigid-body.js';
 import { mesh_rigid_body } from './mesh-rigid-body.js';
 
+import { getDocument } from '../node_modules/pdfjs-dist/build/pdf.mjs';
+
 export const level_1_builder = (() => {
 
   class Level1Builder extends entity.Component {
@@ -239,7 +241,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
           roughnessFactor = diffuseColor.x * 0.5;
 
           vec4 t = noised(floor(vWorldPosition.xyz / size) * 23.926325 + vec3(0.2));
-          vec3 c1 = pal( t.x, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0),vec3(0.0,0.33,0.67) );
+          vec3 c1 = pal( t.x, vec3(0.1,0.3,1.0),vec3(0.0,0.2,0.5),vec3(1.0,1.0,1.0),vec3(0.0,0.33,0.67) );
 
           diffuseColor.xyz *= mix(0.25, 0.5, t.x);
 
@@ -371,70 +373,65 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
          e.SetActive(false);
       }
 
-
-      // {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'box',
-      //     scale: new THREE.Vector3(10, 10, 10),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     // scene: this.params_.scene,
-      //     box: new THREE.Vector3(10, 10, 10),
-      //   }));
-
-      //   this.Manager.Add(e);
-      //   e.SetPosition(new THREE.Vector3(0, 3, -20));
-      //   e.SetActive(false);
-      // }
-
-      // const walls = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-      // for (let i = 0; i < walls.length; ++i) {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'ground',
-      //     scale: new THREE.Vector3(100, 10, 100),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     // scene: this.params_.scene,
-      //     box: new THREE.Vector3(100, 10, 100)
-      //   }));
-
-      //   this.Manager.Add(e);
-      //   e.SetPosition(new THREE.Vector3(walls[i][0] * 100, 3, walls[i][1] * 100));
-      //   e.SetActive(false);
-      // }
-
-      // {
-      //   const e = new entity.Entity();
-      //   e.AddComponent(new render_component.RenderComponent({
-      //     scene: this.params_.scene,
-      //     resourcePath: 'built-in.',
-      //     resourceName: 'box',
-      //     scale: new THREE.Vector3(10, 10, 10),
-      //     emissive: new THREE.Color(0x000000),
-      //     color: new THREE.Color(0xFFFFFF),
-      //   }));
-      //   e.AddComponent(new basic_rigid_body.BasicRigidBody({
-      //     box: new THREE.Vector3(10, 10, 10)
-      //   }));
-
-      //   this.Manager.Add(e, 'box.11');
-      //   e.SetPosition(new THREE.Vector3(0, 5, -20));
-      //   e.SetActive(false);
-      // }
-
-      // this.spawned_.push(e);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
+      const pdfs = ['sample1.pdf', 'sample2.pdf', 'sample3.pdf'];
+      for (let i = 0; i < pdfs.length; ++i) {
+        loadPDF(pdfs[i]).then((canvas) => {
+        
+          const pdfMesh = createPDFMesh(canvas, pdfs[i]);
+          this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
+  
+          const pdfEntity = new entity.Entity();
+          pdfEntity.AddComponent(new render_component.RenderComponent({
+            scene: this.params_.scene,
+            resourcePath: 'built-in.',
+            resourceName: 'pdfMesh' + '_' + i,
+            scale: new THREE.Vector3(canvas.width / 1750 * 3, canvas.height / 1750 * 3, 1),
+          }));
+  
+          this.Manager.Add(pdfEntity);
+          var position = 150 * 0.75 / pdfs.length
+          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -6.0, -70));
+          pdfEntity.SetActive(false);
+        });
+     }
     }
   };
+
+  function loadPDF(name) {
+    const basePath = './resources/pdf/'
+    return getDocument(basePath + name).promise.then((pdf) => {
+      return pdf.getPage(1).then((page) => {
+        const viewport = page.getViewport({ scale: 3.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const context = canvas.getContext('2d');
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        return page.render(renderContext).promise.then(() => canvas);
+      });
+    });
+  }
+
+
+  function createPDFMesh(canvas, name) {
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.encoding = THREE.sRGBEncoding;
+    texture.minFilter = THREE.LinearFilter;
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    material.side = THREE.DoubleSide;
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const basePath = './resources/pdf/'
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.userData.pdfUrl = basePath + name;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  }
+
 
   return {
     Level1Builder: Level1Builder

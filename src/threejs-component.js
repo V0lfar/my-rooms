@@ -290,6 +290,10 @@ export const threejs_component = (() => {
       return this.threejs_.capabilities.getMaxAnisotropy();
     }
 
+    getCamera() {
+      return this.camera_;
+    }
+
     onWindowResize_() {
       this.camera_.aspect = window.innerWidth / window.innerHeight;
       this.camera_.updateProjectionMatrix();

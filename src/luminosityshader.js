@@ -40,6 +40,7 @@ const LuminosityHighPassShader = {
 			vec4 outputColor = vec4( defaultColor.rgb, defaultOpacity );
 			float alpha = smoothstep( luminosityThreshold, luminosityThreshold + smoothWidth, v );
 			alpha = texel.w;
+			texel.rgb *= 0.01;
 			gl_FragColor = mix( outputColor, texel, alpha );
 		}`
 
