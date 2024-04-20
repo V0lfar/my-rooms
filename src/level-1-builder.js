@@ -241,7 +241,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
           roughnessFactor = diffuseColor.x * 0.5;
 
           vec4 t = noised(floor(vWorldPosition.xyz / size) * 23.926325 + vec3(0.2));
-          vec3 c1 = pal( t.x, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,1.0),vec3(0.0,0.33,0.67) );
+          vec3 c1 = pal( t.x, vec3(0.1,0.3,1.0),vec3(0.0,0.2,0.5),vec3(1.0,1.0,1.0),vec3(0.0,0.33,0.67) );
 
           diffuseColor.xyz *= mix(0.25, 0.5, t.x);
 
@@ -374,7 +374,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       }
 
       pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
-      const pdfs = ['sample.pdf', 'sample2.pdf', 'sample3.pdf'];
+      const pdfs = ['sample1.pdf', 'sample2.pdf', 'sample3.pdf'];
       for (let i = 0; i < pdfs.length; ++i) {
         loadPDF(pdfs[i]).then((canvas) => {
         
@@ -386,12 +386,12 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             scene: this.params_.scene,
             resourcePath: 'built-in.',
             resourceName: 'pdfMesh' + '_' + i,
-            scale: new THREE.Vector3(canvas.width / 1000 * 3, canvas.height / 1000 * 3, 1),
+            scale: new THREE.Vector3(canvas.width / 1750 * 3, canvas.height / 1750 * 3, 1),
           }));
   
           this.Manager.Add(pdfEntity);
           var position = 150 * 0.75 / pdfs.length
-          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -4.5, -70));
+          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -6.0, -70));
           pdfEntity.SetActive(false);
         });
      }
