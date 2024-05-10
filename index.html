@@ -1,15 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>VIF</title>
-  <link rel="stylesheet" type="text/css" href="base.css">
-  <link rel="shortcut icon" href="#">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIF</title>
+<style>
+  body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header {
+    width: 30%; /* Adjusted width */
+    padding: 20px;
+    margin-bottom: 100px; /* Adjust this value to move the box up */
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  .header h1 {
+    color: #333;
+    margin: 0;
+  }
+  .button {
+    display: block; /* Make buttons stack vertically */
+    width: 80%; /* Adjust button width as needed */
+    padding: 10px 20px;
+    margin: 10px auto; /* Center buttons horizontally */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size as needed */
+  }
+  .join-btn {
+    background-color: #5c6bc0;
+    color: white;
+  }
+  .search-btn {
+    background-color: #42a5f5;
+    color: white;
+  }
+  .footer {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: center;
+  }
+  .input-field {
+    display: block;
+    width: 80%; /* Match the button width */
+    padding: 10px 20px; /* Match the button padding */
+    margin: 10px auto; /* Center the input field horizontally */
+    border: 2px solid #5c6bc0; /* Optional: Add a border to match button style */
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+  }
+</style>
+<script>
+  function redirectToRoom() {
+    var roomId = document.getElementById('room-id').value;
+    window.location.href = 'myroom?id=' + roomId;
+  }
+</script>
 </head>
 <body>
-  <script src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@HEAD/builds/ammo.js"></script>
-  <script src="./src/main.js" type="module">
-  </script>
-  <div class="container" id="container">
+
+<div class="container">
+  <div class="header">
+    <h1>VIF<span style="color: #42a5f5;">&#9679;</span></h1>
+    <p>Welcome to the Virtual International Conference</p>
+    <button class="button join-btn" onclick="redirectToRoom()">Join Room</button>
+    <input type="text" id="room-id" class="input-field" placeholder="Enter room ID" />
+    <button class="button search-btn">Search Room</button>
   </div>
+</div>
+
+<div class="footer">
+  <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
+</div>
+
 </body>
 </html>
