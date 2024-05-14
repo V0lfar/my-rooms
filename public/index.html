@@ -65,13 +65,10 @@
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box; /* Include padding and border in the element's total width */
+    transition: border-color 0.25s ease;
   }
 </style>
-<script>
-  function redirectToRoom() {
-    var roomId = document.getElementById('room-id').value;
-    window.location.href = 'myroom?id=' + roomId;
-  }
+<script src="/src/user-input.js" type="module">
 </script>
 </head>
 <body>
@@ -81,7 +78,7 @@
     <h1>VIF<span style="color: #42a5f5;">&#9679;</span></h1>
     <p>Welcome to the Virtual International Conference</p>
     <button class="button join-btn" onclick="redirectToRoom()">Join Room</button>
-    <input type="text" id="room-id" class="input-field" placeholder="Enter room ID" />
+    <input type="text" id="room-code" class="input-field" placeholder="Enter room code" />
     <button class="button search-btn">Search Room</button>
   </div>
 </div>

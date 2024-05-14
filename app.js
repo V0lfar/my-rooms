@@ -14,6 +14,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/myroom', (req, res) => {
+app.get('/myroom/:roomCode', (req, res) => {
   res.sendFile(__dirname + '/public/myroom.html');
 });

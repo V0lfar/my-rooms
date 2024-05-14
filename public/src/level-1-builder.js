@@ -23,28 +23,28 @@ export const level_1_builder = (() => {
 
     LoadMaterial_(albedoName, normalName, roughnessName, metalnessName) {
       const textureLoader = new THREE.TextureLoader();
-      const albedo = textureLoader.load('./resources/textures/' + albedoName);
+      const albedo = textureLoader.load('/resources/textures/' + albedoName);
       albedo.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
       albedo.wrapS = THREE.RepeatWrapping;
       albedo.wrapT = THREE.RepeatWrapping;
       albedo.encoding = THREE.sRGBEncoding;
 
       if (metalnessName != null) {
-        const metalness = textureLoader.load('./resources/textures/' + metalnessName);
+        const metalness = textureLoader.load('/resources/textures/' + metalnessName);
         metalness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         metalness.wrapS = THREE.RepeatWrapping;
         metalness.wrapT = THREE.RepeatWrapping;
       }
 
       if (normalName != null) {
-        const normal = textureLoader.load('./resources/textures/' + normalName);
+        const normal = textureLoader.load('/resources/textures/' + normalName);
         normal.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         normal.wrapS = THREE.RepeatWrapping;
         normal.wrapT = THREE.RepeatWrapping;
       }
 
       if (roughnessName != null) {
-        const roughness = textureLoader.load('./resources/textures/' + roughnessName);
+        const roughness = textureLoader.load('/resources/textures/' + roughnessName);
         roughness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         roughness.wrapS = THREE.RepeatWrapping;
         roughness.wrapT = THREE.RepeatWrapping;
@@ -374,6 +374,9 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       }
 
       pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
+
+      const roomCode = getRoomCodeFromUrl();
+      
       const pdfs = ['sample1.pdf', 'sample2.pdf', 'sample3.pdf'];
       for (let i = 0; i < pdfs.length; ++i) {
         loadPDF(pdfs[i]).then((canvas) => {
@@ -398,8 +401,14 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     }
   };
 
+  function getRoomCodeFromUrl() {
+    var urlPath = window.location.pathname;
+    var urlParts = urlPath.split('/');
+    return urlParts[urlParts.length - 1]; 
+  }
+
   function loadPDF(name) {
-    const basePath = './resources/pdf/'
+    const basePath = '/resources/pdf/'
     return getDocument(basePath + name).promise.then((pdf) => {
       return pdf.getPage(1).then((page) => {
         const viewport = page.getViewport({ scale: 3.0 });
@@ -424,7 +433,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     const material = new THREE.MeshBasicMaterial({ map: texture });
     material.side = THREE.DoubleSide;
     const geometry = new THREE.PlaneGeometry(1, 1);
-    const basePath = './resources/pdf/'
+    const basePath = '/resources/pdf/'
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.pdfUrl = basePath + name;
     mesh.castShadow = true;
