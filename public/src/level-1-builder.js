@@ -327,7 +327,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       this.currentTime_ = 0.0;
     }
 
-    Update(timeElapsed) {
+    async Update(timeElapsed) {
       this.currentTime_ += timeElapsed;
 
       if (this.materials_.checkerboard && this.materials_.checkerboard.userData.shader) {
@@ -376,12 +376,12 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
       const roomCode = getRoomCodeFromUrl();
-      
-      const pdfs = ['sample1.pdf', 'sample2.pdf', 'sample3.pdf'];
-      for (let i = 0; i < pdfs.length; ++i) {
-        loadPDF(pdfs[i]).then((canvas) => {
+      const room = await getRoom(roomCode)
+      const monitors = room.monitors;
+      for (let i = 0; i < monitors.length; ++i) {
+        loadPDF(monitors[i]).then((canvas) => {
         
-          const pdfMesh = createPDFMesh(canvas, pdfs[i]);
+          const pdfMesh = createPDFMesh(canvas, monitors[i]);
           this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
   
           const pdfEntity = new entity.Entity();
@@ -393,7 +393,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
           }));
   
           this.Manager.Add(pdfEntity);
-          var position = 150 * 0.75 / pdfs.length
+          var position = 150 * 0.75 / monitors.length
           pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -6.0, -70));
           pdfEntity.SetActive(false);
         });
@@ -401,15 +401,30 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     }
   };
 
+  function getRoom(roomCode) {
+    return fetch('http://localhost:8080/rooms/' + roomCode)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Invalid room response');
+      }
+      return response.json();
+    })
+    .then(roomData => {
+      return roomData;
+    })
+    .catch(error => {
+      console.error('There has been an error during room retrieving:', error);
+    });
+  }
+
   function getRoomCodeFromUrl() {
     var urlPath = window.location.pathname;
     var urlParts = urlPath.split('/');
     return urlParts[urlParts.length - 1]; 
   }
 
-  function loadPDF(name) {
-    const basePath = '/resources/pdf/'
-    return getDocument(basePath + name).promise.then((pdf) => {
+  async function loadPDF(monitor) {
+    return getDocument('http://localhost:8080/monitor/' + monitor.id).promise.then((pdf) => {
       return pdf.getPage(1).then((page) => {
         const viewport = page.getViewport({ scale: 3.0 });
         const canvas = document.createElement('canvas');
@@ -425,8 +440,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     });
   }
 
-
-  function createPDFMesh(canvas, name) {
+  function createPDFMesh(canvas, monitor) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.encoding = THREE.sRGBEncoding;
     texture.minFilter = THREE.LinearFilter;
@@ -435,7 +449,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     const geometry = new THREE.PlaneGeometry(1, 1);
     const basePath = '/resources/pdf/'
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.userData.pdfUrl = basePath + name;
+    mesh.userData.pdfId = monitor.id;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     return mesh;
