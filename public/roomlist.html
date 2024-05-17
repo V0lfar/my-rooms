@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room List</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+
+    .back-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #42a5f5;
+      color: white;
+    }
+
+    .search-sort-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+      width: 400px;
+      /* adjust as needed */
+    }
+
+    .sort-dropdown {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+
+    .sort-order-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #42a5f5;
+      color: white;
+    }
+
+    .rooms-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 20px;
+    }
+
+    .room-tile {
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      width: calc(25% - 20px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .room-tile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .room-image {
+      width: 150px;
+      /* adjust as needed */
+      height: 150px;
+      /* adjust as needed */
+      background-size: cover;
+      background-position: center;
+      border-radius: 5px;
+      margin: 0 auto;
+      /* centers the image horizontally */
+      background-color: transparent;
+      /* removes the background */
+    }
+
+    .room-name {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .pagination {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .page-number {
+      margin: 0 5px;
+      cursor: pointer;
+      color: #42a5f5;
+    }
+
+    .search-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #42a5f5;
+      color: white;
+    }
+
+    .footer {
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      margin-top: auto;
+    }
+  </style>
+  <script type="module">
+    import { loadRooms } from "/src/roomlist.js"
+
+    window.onload = loadRooms;
+  </script>
+</head>
+
+<body>
+  <div class="top-bar">
+    <button class="back-btn" onclick="window.location.href='/';">Back to Main</button>
+    <div class="search-sort-bar">
+      <input type="text" class="search-input" placeholder="Search rooms..." id="search-query">
+      <select class="sort-dropdown" id="sort-option">
+        <option value="name-asc">Name (A-Z)</option>
+        <option value="name-desc">Name (Z-A)</option>
+        <option value="time-asc">Created Time (Oldest First)</option>
+        <option value="time-desc">Created Time (Newest First)</option>
+      </select>
+      <button class="search-btn" onclick="searchRooms()">Search</button>
+    </div>
+  </div>
+
+  <div class="rooms-container">
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
+  </div>
+</body>
+
+</html>
