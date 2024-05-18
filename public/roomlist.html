@@ -78,6 +78,7 @@
       width: calc(25% - 20px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      position: relative;
     }
 
     .room-tile:hover {
@@ -124,6 +125,27 @@
       color: white;
     }
 
+    .copy-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #42a5f5; /* Green background */
+      border: none; /* Remove border */
+      color: white; /* White text */
+      padding: 5px 10px; /* Some padding */
+      text-align: center; /* Centered text */
+      text-decoration: none; /* Remove underline */
+      display: inline-block;
+      font-size: 16px;
+      transition-duration: 0.4s; /* Transition effect */
+      cursor: pointer; /* Add a pointer cursor on hover */
+    }
+    
+    .copy-button:hover {
+      background-color: #5c6bc0; /* White background */
+      color: black; /* Black text */
+    }
+
     .footer {
       background-color: #f0f0f0;
       padding: 10px;
@@ -134,7 +156,31 @@
   <script type="module">
     import { loadRooms } from "/src/roomlist.js"
 
-    window.onload = loadRooms;
+    window.onload = function() {
+      document.getElementById('search-query').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          searchRooms();
+        }
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchTerm = urlParams.get('term');
+      const sortOption = urlParams.get('sort') || 'time-desc';
+      let url = 'http://localhost:8080/rooms';
+      let params = [];
+      if (searchTerm) {
+        params.push('term=' + encodeURIComponent(searchTerm));
+      }
+      if (sortOption) {
+        params.push('sort=' + encodeURIComponent(sortOption));
+      }
+      if (params.length > 0) {
+        url += '?' + params.join('&');
+      }
+      document.getElementById('search-query').value = searchTerm || '';
+      document.getElementById('sort-option').value = sortOption;
+      loadRooms(url);
+    }
   </script>
 </head>
 
@@ -144,10 +190,10 @@
     <div class="search-sort-bar">
       <input type="text" class="search-input" placeholder="Search rooms..." id="search-query">
       <select class="sort-dropdown" id="sort-option">
-        <option value="name-asc">Name (A-Z)</option>
-        <option value="name-desc">Name (Z-A)</option>
-        <option value="time-asc">Created Time (Oldest First)</option>
         <option value="time-desc">Created Time (Newest First)</option>
+        <option value="time-asc">Created Time (Oldest First)</option>
+        <option value="title-asc">Name (A-Z)</option>
+        <option value="title-desc">Name (Z-A)</option>
       </select>
       <button class="search-btn" onclick="searchRooms()">Search</button>
     </div>

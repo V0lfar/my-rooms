@@ -67,8 +67,61 @@
     box-sizing: border-box; /* Include padding and border in the element's total width */
     transition: border-color 0.25s ease;
   }
+
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px; /* Add this line to make the borders round */
+    width: 80%;
+    text-align: center; /* Center the text */
+    font-family: Arial, sans-serif; /* Change the font */
+    font-size: 20px; /* Increase the font size */
+  }
+  
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
 </style>
 <script src="/src/user-input.js" type="module">
+</script>
+<script type="module">
+  window.onload = function() {
+    document.getElementById('room-code').addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        redirectToRoom();
+      }
+    });
+
+    document.getElementById('room-code').addEventListener('input', function() {
+      this.style.borderColor = '';
+    });
+  }
 </script>
 </head>
 <body>
@@ -77,9 +130,9 @@
   <div class="header">
     <h1>VIF<span style="color: #42a5f5;">&#9679;</span></h1>
     <p>Welcome to the Virtual International Conference</p>
-    <button class="button join-btn" onclick="redirectToRoom()">Join Room</button>
+    <button class="button join-btn" id="join-button" onclick="redirectToRoom()">Join Room</button>
     <input type="text" id="room-code" class="input-field" placeholder="Enter room code" />
-    <button class="button search-btn" onclick="window.location.href='/rooms';">Search Room</button>
+    <button class="button search-btn" onclick="window.location.href='/rooms?sort=time-desc';">Search Room</button>
   </div>
 </div>
 
@@ -87,5 +140,11 @@
   <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
 </div>
 
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modal-text">Room does not exist.</p>
+  </div>
+</div>
 </body>
 </html>

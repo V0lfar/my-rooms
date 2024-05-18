@@ -1,5 +1,5 @@
-export async function loadRooms() {
-  return await fetch('http://localhost:8080/rooms')
+export async function loadRooms(url) {
+  return await fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -25,6 +25,17 @@ export async function loadRooms() {
         roomName.textContent = room.title;
         roomTile.appendChild(roomName);
 
+        // Create the copy button
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button';
+        copyButton.innerHTML = '&#128203;'; // Clipboard icon
+        copyButton.onclick = (event) => {
+          event.stopPropagation(); // Prevent triggering the roomTile's onclick handler
+          navigator.clipboard.writeText(room.code); // Copy the room code to the clipboard
+        };
+        
+        roomTile.appendChild(copyButton);
+
         roomsContainer.appendChild(roomTile);
       });
     })
@@ -33,6 +44,24 @@ export async function loadRooms() {
     });
 }
 
-window.openRoom = function(roomCode) {
+window.openRoom = function (roomCode) {
   window.location.href = 'http://localhost:3000/myroom/' + roomCode;
+}
+
+window.searchRooms = function () {
+  const searchTerm = document.getElementById('search-query').value;
+  const sortOption = document.getElementById('sort-option').value;
+  let url = 'http://localhost:8080/rooms';
+  let params = [];
+  if (searchTerm) {
+    params.push('term=' + encodeURIComponent(searchTerm));
+  }
+  if (sortOption) {
+    params.push('sort=' + encodeURIComponent(sortOption));
+  }
+  if (params.length > 0) {
+    url += '?' + params.join('&');
+  }
+  history.pushState(null, '', window.location.pathname + '?' + params.join('&'));
+  loadRooms(url);
 }

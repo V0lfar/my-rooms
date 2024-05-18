@@ -11,7 +11,18 @@ window.redirectToRoom = function() {
     .then(roomExists => {
       if (!roomExists) {
         roomCodeInput.style.borderColor = 'lightcoral';
-        alert('Room does not exist.');
+        // Show the modal
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+        modal.style.display = "block";
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
         return;
       }
       roomCodeInput.style.borderColor = '';
