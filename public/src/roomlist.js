@@ -13,11 +13,11 @@ export async function loadRooms() {
       rooms.forEach(room => {
         const roomTile = document.createElement('div');
         roomTile.className = 'room-tile';
-        roomTile.onclick = () => openRoom(room.id);
+        roomTile.onclick = () => openRoom(room.code);
 
         const roomImage = document.createElement('div');
         roomImage.className = 'room-image';
-        roomImage.style.backgroundImage = 'resources/images/virtualRoomDefaultIcon.pdf';
+        roomImage.style.backgroundImage = `url(/resources/images/virtualRoomDefaultIcon.png)`;
         roomTile.appendChild(roomImage);
 
         const roomName = document.createElement('div');
@@ -31,4 +31,8 @@ export async function loadRooms() {
     .catch(error => {
       console.error('There has been a problem with your fetch operation:', error);
     });
+}
+
+window.openRoom = function(roomCode) {
+  window.location.href = 'http://localhost:3000/myroom/' + roomCode;
 }
