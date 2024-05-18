@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIF</title>
+  <link rel="stylesheet" type="text/css" href="/base.css">
+  <script type="module">
+    import { loadRooms } from "/src/roomlist.js"
+
+    window.onload = function () {
+      document.getElementById('search-query').addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+          searchRooms();
+        }
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchTerm = urlParams.get('term');
+      const sortOption = urlParams.get('sort') || 'time-desc';
+      let url = 'http://localhost:8080/rooms';
+      let params = [];
+      if (searchTerm) {
+        params.push('term=' + encodeURIComponent(searchTerm));
+      }
+      if (sortOption) {
+        params.push('sort=' + encodeURIComponent(sortOption));
+      }
+      if (params.length > 0) {
+        url += '?' + params.join('&');
+      }
+      document.getElementById('search-query').value = searchTerm || '';
+      document.getElementById('sort-option').value = sortOption;
+      loadRooms(url);
+    }
+  </script>
+</head>
+
+<body>
+  <div class="top-bar">
+    <button class="back-btn" onclick="window.location.href='/';">Back to Main</button>
+    <div class="search-sort-bar">
+      <input type="text" class="search-input" placeholder="Search rooms..." id="search-query">
+      <select class="sort-dropdown" id="sort-option">
+        <option value="time-desc">Created Time (Newest First)</option>
+        <option value="time-asc">Created Time (Oldest First)</option>
+        <option value="title-asc">Name (A-Z)</option>
+        <option value="title-desc">Name (Z-A)</option>
+      </select>
+      <button class="search-btn" onclick="searchRooms()">Search</button>
+    </div>
+  </div>
+
+  <div class="rooms-container">
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
+  </div>
+</body>
+
+</html>

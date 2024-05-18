@@ -23,28 +23,28 @@ export const level_1_builder = (() => {
 
     LoadMaterial_(albedoName, normalName, roughnessName, metalnessName) {
       const textureLoader = new THREE.TextureLoader();
-      const albedo = textureLoader.load('./resources/textures/' + albedoName);
+      const albedo = textureLoader.load('/resources/textures/' + albedoName);
       albedo.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
       albedo.wrapS = THREE.RepeatWrapping;
       albedo.wrapT = THREE.RepeatWrapping;
       albedo.encoding = THREE.sRGBEncoding;
 
       if (metalnessName != null) {
-        const metalness = textureLoader.load('./resources/textures/' + metalnessName);
+        const metalness = textureLoader.load('/resources/textures/' + metalnessName);
         metalness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         metalness.wrapS = THREE.RepeatWrapping;
         metalness.wrapT = THREE.RepeatWrapping;
       }
 
       if (normalName != null) {
-        const normal = textureLoader.load('./resources/textures/' + normalName);
+        const normal = textureLoader.load('/resources/textures/' + normalName);
         normal.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         normal.wrapS = THREE.RepeatWrapping;
         normal.wrapT = THREE.RepeatWrapping;
       }
 
       if (roughnessName != null) {
-        const roughness = textureLoader.load('./resources/textures/' + roughnessName);
+        const roughness = textureLoader.load('/resources/textures/' + roughnessName);
         roughness.anisotropy = this.FindEntity('threejs').GetComponent('ThreeJSController').getMaxAnisotropy();
         roughness.wrapS = THREE.RepeatWrapping;
         roughness.wrapT = THREE.RepeatWrapping;
@@ -327,7 +327,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       this.currentTime_ = 0.0;
     }
 
-    Update(timeElapsed) {
+    async Update(timeElapsed) {
       this.currentTime_ += timeElapsed;
 
       if (this.materials_.checkerboard && this.materials_.checkerboard.userData.shader) {
@@ -374,11 +374,28 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       }
 
       pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
-      const pdfs = ['sample1.pdf', 'sample2.pdf', 'sample3.pdf'];
-      for (let i = 0; i < pdfs.length; ++i) {
-        loadPDF(pdfs[i]).then((canvas) => {
-        
-          const pdfMesh = createPDFMesh(canvas, pdfs[i]);
+
+      const roomCode = getRoomCodeFromUrl();
+      const room = await getRoom(roomCode)
+      const monitors = room.monitors;
+      const monitorsPerLayer = 19;
+      let roomLayerPos = -70;
+      let monitorPosition = -67
+
+      const monitorPromises = monitors.map((monitor, i) => {
+        return loadPDF(monitor).then((canvas) => {
+          return { index: i, canvas: canvas };
+        });
+      });
+
+      Promise.all(monitorPromises).then((results) => {
+        results.sort((a, b) => a.index - b.index);
+      
+        for (let result of results) {
+          const i = result.index;
+          const canvas = result.canvas;
+      
+          const pdfMesh = createPDFMesh(canvas, monitors[i]);
           this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
   
           const pdfEntity = new entity.Entity();
@@ -388,19 +405,48 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             resourceName: 'pdfMesh' + '_' + i,
             scale: new THREE.Vector3(canvas.width / 1750 * 3, canvas.height / 1750 * 3, 1),
           }));
-  
           this.Manager.Add(pdfEntity);
-          var position = 150 * 0.75 / pdfs.length
-          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -6.0, -70));
+      
+          if (i !== 0) {
+            if ((i + 1) % monitorsPerLayer === 0) {
+              roomLayerPos += 10;
+              monitorPosition = -67;
+            } else {
+              monitorPosition += 8;
+            }
+          }
+          
+          pdfEntity.SetPosition(new THREE.Vector3(monitorPosition, -6.0, roomLayerPos));
           pdfEntity.SetActive(false);
-        });
-     }
+        }
+      });
     }
   };
 
-  function loadPDF(name) {
-    const basePath = './resources/pdf/'
-    return getDocument(basePath + name).promise.then((pdf) => {
+  function getRoom(roomCode) {
+    return fetch('http://localhost:8080/rooms/' + roomCode)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Invalid room response');
+      }
+      return response.json();
+    })
+    .then(roomData => {
+      return roomData;
+    })
+    .catch(error => {
+      console.error('There has been an error during room retrieving:', error);
+    });
+  }
+
+  function getRoomCodeFromUrl() {
+    var urlPath = window.location.pathname;
+    var urlParts = urlPath.split('/');
+    return urlParts[urlParts.length - 1]; 
+  }
+
+  async function loadPDF(monitor) {
+    return getDocument('http://localhost:8080/monitor/' + monitor.id).promise.then((pdf) => {
       return pdf.getPage(1).then((page) => {
         const viewport = page.getViewport({ scale: 3.0 });
         const canvas = document.createElement('canvas');
@@ -416,17 +462,16 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     });
   }
 
-
-  function createPDFMesh(canvas, name) {
+  function createPDFMesh(canvas, monitor) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.encoding = THREE.sRGBEncoding;
     texture.minFilter = THREE.LinearFilter;
     const material = new THREE.MeshBasicMaterial({ map: texture });
     material.side = THREE.DoubleSide;
     const geometry = new THREE.PlaneGeometry(1, 1);
-    const basePath = './resources/pdf/'
+    const basePath = '/resources/pdf/'
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.userData.pdfUrl = basePath + name;
+    mesh.userData.pdfId = monitor.id;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     return mesh;

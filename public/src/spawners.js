@@ -17,7 +17,7 @@ export const spawners = (() => {
 
     Spawn() {
       const player = new entity.Entity();
-      player.SetPosition(new THREE.Vector3(0, 2, -85));
+      player.SetPosition(new THREE.Vector3(-89, 2, -85));
       player.AddComponent(new player_input.PlayerInput(this.params_));
       player.AddComponent(new first_person_camera.FirstPersonCamera(this.params_));
       player.AddComponent(new kinematic_character_controller.KinematicCharacterController(this.params_));

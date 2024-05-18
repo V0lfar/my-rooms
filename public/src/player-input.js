@@ -75,8 +75,9 @@ export const player_input = (() => {
       // Check if the PDF mesh is intersected
       for (let i = 0; i < intersects.length; i++) {
         //console.log(intersects[i].object)
-        if (intersects[i].object.userData.pdfUrl) {
-          window.open(intersects[i].object.userData.pdfUrl);
+        if (intersects[i].object.userData.pdfId) {
+          const id = intersects[i].object.userData.pdfId;
+          window.open('http://localhost:8080/monitor/' + id + "?attachment=true");
           break;
         }
       }
