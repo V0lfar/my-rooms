@@ -378,9 +378,23 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
       const roomCode = getRoomCodeFromUrl();
       const room = await getRoom(roomCode)
       const monitors = room.monitors;
-      for (let i = 0; i < monitors.length; ++i) {
-        loadPDF(monitors[i]).then((canvas) => {
-        
+      const monitorsPerLayer = 19;
+      let roomLayerPos = -70;
+      let monitorPosition = -67
+
+      const monitorPromises = monitors.map((monitor, i) => {
+        return loadPDF(monitor).then((canvas) => {
+          return { index: i, canvas: canvas };
+        });
+      });
+
+      Promise.all(monitorPromises).then((results) => {
+        results.sort((a, b) => a.index - b.index);
+      
+        for (let result of results) {
+          const i = result.index;
+          const canvas = result.canvas;
+      
           const pdfMesh = createPDFMesh(canvas, monitors[i]);
           this.FindEntity('loader').GetComponent('LoadController').AddModel(pdfMesh, 'built-in.', 'pdfMesh' + '_' + i);
   
@@ -391,13 +405,21 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
             resourceName: 'pdfMesh' + '_' + i,
             scale: new THREE.Vector3(canvas.width / 1750 * 3, canvas.height / 1750 * 3, 1),
           }));
-  
           this.Manager.Add(pdfEntity);
-          var position = 150 * 0.75 / monitors.length
-          pdfEntity.SetPosition(new THREE.Vector3(position * (i - 1), -6.0, -70));
+      
+          if (i !== 0) {
+            if ((i + 1) % monitorsPerLayer === 0) {
+              roomLayerPos += 10;
+              monitorPosition = -67;
+            } else {
+              monitorPosition += 8;
+            }
+          }
+          
+          pdfEntity.SetPosition(new THREE.Vector3(monitorPosition, -6.0, roomLayerPos));
           pdfEntity.SetActive(false);
-        });
-     }
+        }
+      });
     }
   };
 
