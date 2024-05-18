@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Room List</title>
+  <title>VIF</title>
   <style>
     body {
       background-color: white;
@@ -129,21 +129,30 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      background-color: #42a5f5; /* Green background */
-      border: none; /* Remove border */
-      color: white; /* White text */
-      padding: 5px 10px; /* Some padding */
-      text-align: center; /* Centered text */
-      text-decoration: none; /* Remove underline */
+      background-color: #42a5f5;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
       display: inline-block;
       font-size: 16px;
-      transition-duration: 0.4s; /* Transition effect */
-      cursor: pointer; /* Add a pointer cursor on hover */
+      transition-duration: 0.4s;
+      cursor: pointer;
+
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+
+      background-image: url('/resources/images/whiteCopy.png');
+      background-size: 50%;
+      background-repeat: no-repeat;
+      background-position: center;
     }
-    
+
     .copy-button:hover {
-      background-color: #5c6bc0; /* White background */
-      color: black; /* Black text */
+      background-color: #5c6bc0;
+      color: white;
     }
 
     .footer {
@@ -156,8 +165,8 @@
   <script type="module">
     import { loadRooms } from "/src/roomlist.js"
 
-    window.onload = function() {
-      document.getElementById('search-query').addEventListener('keyup', function(event) {
+    window.onload = function () {
+      document.getElementById('search-query').addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
           searchRooms();
         }

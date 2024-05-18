@@ -28,12 +28,11 @@ export async function loadRooms(url) {
         // Create the copy button
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
-        copyButton.innerHTML = '&#128203;'; // Clipboard icon
         copyButton.onclick = (event) => {
           event.stopPropagation(); // Prevent triggering the roomTile's onclick handler
           navigator.clipboard.writeText(room.code); // Copy the room code to the clipboard
         };
-        
+
         roomTile.appendChild(copyButton);
 
         roomsContainer.appendChild(roomTile);
