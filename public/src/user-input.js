@@ -30,5 +30,6 @@ window.redirectToRoom = function() {
     })
     .catch(error => {
       console.error('Not able to check room existence:', error);
+      window.location.href = '/error';
     });
 }

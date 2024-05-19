@@ -426,7 +426,9 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
   function getRoom(roomCode) {
     return fetch('http://localhost:8080/rooms/' + roomCode)
     .then(response => {
-      if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Room not found');
+      } else if (!response.ok) {
         throw new Error('Invalid room response');
       }
       return response.json();
@@ -436,6 +438,9 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     })
     .catch(error => {
       console.error('There has been an error during room retrieving:', error);
+      if (error.message === 'Room not found') {
+        window.location.href = '/notfound';
+      }
     });
   }
 

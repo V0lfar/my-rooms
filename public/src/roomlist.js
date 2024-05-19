@@ -40,6 +40,7 @@ export async function loadRooms(url) {
     })
     .catch(error => {
       console.error('There has been a problem with your fetch operation:', error);
+      window.location.href = '/error';
     });
 }
 
