@@ -420,8 +420,18 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
           pdfEntity.SetActive(false);
         }
       });
+      hideLoader();
     }
   };
+
+  function hideLoader() {
+    const loader = document.getElementById('loader-wrapper');
+    const backButton = document.getElementById('back-to-main-btn');
+    if (loader) {
+      loader.style.display = 'none';
+      backButton.style.display = 'inline-block';
+    }
+  }  
 
   function getRoom(roomCode) {
     return fetch('http://localhost:8080/rooms/' + roomCode)
