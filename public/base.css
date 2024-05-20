@@ -303,3 +303,10 @@ option {
   font-size: 1.5em;
   color: #42a5f5;
 }
+
+#warning-message {
+  visibility: hidden;
+  color: lightcoral;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

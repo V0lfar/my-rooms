@@ -1,27 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIF</title>
-<link rel="stylesheet" type="text/css" href="/base.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIF</title>
+  <link rel="stylesheet" type="text/css" href="/base.css">
+  <script src="/src/auth.js" type="module"></script>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">
-    <h1>Admin Login</h1>
-    <form id="admin-login-form" action="/admin/login" method="post">
-      <input type="text" id="username" class="input-field" placeholder="Username" required />
-      <input type="password" id="password" class="input-field" placeholder="Password" required />
-      <button type="submit" class="button join-btn">Login</button>
-    </form>
+  <div class="container">
+    <div class="header">
+      <h1>Admin Login</h1>
+      <form id="admin-login-form">
+        <input type="text" id="username" class="input-field" placeholder="Username" required />
+        <input type="password" id="password" class="input-field" placeholder="Password" required />
+        <p id="warning-message">Invalid username or password</p>
+        <button type="submit" class="button join-btn">Login</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<div class="footer">
-  <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
-</div>
+  <div class="footer">
+    <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
+  </div>
+
+  <script type="module">
+    import { login } from '/src/auth.js';
+
+    document.getElementById('admin-login-form').addEventListener('submit', async function (event) {
+      event.preventDefault(); // Prevent the form from being submitted normally
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        await login(username, password);
+        window.location.href = '/'; // Redirect to the home page
+      } catch (error) {
+        // Show the warning message
+        document.getElementById('warning-message').style.visibility = 'visible';
+      }
+    });
+
+    // Hide the warning message when the user starts typing
+    document.getElementById('username').addEventListener('input', function () {
+      document.getElementById('warning-message').style.visibility = 'hidden';
+    });
+    document.getElementById('password').addEventListener('input', function () {
+      document.getElementById('warning-message').style.visibility = 'hidden';
+    });
+  </script>
 
 </body>
+
 </html>
