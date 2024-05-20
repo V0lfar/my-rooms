@@ -25,6 +25,10 @@ app.get('/notfound', (req, res) => {
   res.sendFile(__dirname + '/public/errors/404.html');
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/public/login.html');
+});
+
 app.get('/error', (req, res) => {
   res.sendFile(__dirname + '/public/errors/500.html');
 });
