@@ -29,12 +29,31 @@ export async function loadRooms(url) {
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
         copyButton.onclick = (event) => {
-          event.stopPropagation(); // Prevent triggering the roomTile's onclick handler
-          navigator.clipboard.writeText(room.code); // Copy the room code to the clipboard
+          event.stopPropagation();
+          navigator.clipboard.writeText(room.code);
         };
 
         roomTile.appendChild(copyButton);
 
+        if (sessionStorage.getItem('username') && sessionStorage.getItem('password')) {
+
+          const editButton = document.createElement('button');
+          editButton.className = 'edit-button';
+          editButton.onclick = (event) => {
+            event.stopPropagation();
+            // Add your code to remove the room here
+          };
+          roomTile.appendChild(editButton);
+
+          const removeButton = document.createElement('button');
+          removeButton.className = 'remove-button';
+          removeButton.onclick = (event) => {
+            event.stopPropagation();
+            // Add your code to remove the room here
+          };
+          roomTile.appendChild(removeButton);
+
+        }
         roomsContainer.appendChild(roomTile);
       });
     })
