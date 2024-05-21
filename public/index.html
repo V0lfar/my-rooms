@@ -1,47 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIF</title>
-<link rel="stylesheet" type="text/css" href="/base.css">
-<script src="/src/user-input.js" type="module">
-</script>
-<script type="module">
-  window.onload = function() {
-    document.getElementById('room-code').addEventListener('keyup', function(event) {
-      if (event.key === 'Enter') {
-        redirectToRoom();
-      }
-    });
 
-    document.getElementById('room-code').addEventListener('input', function() {
-      this.style.borderColor = '';
-    });
-  }
-</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIF</title>
+  <link rel="stylesheet" type="text/css" href="/base.css">
+  <script src="/src/user-input.js" type="module">
+  </script>
+  <script type="module">
+    window.onload = function () {
+      document.getElementById('room-code').addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+          redirectToRoom();
+        }
+      });
+
+      document.getElementById('room-code').addEventListener('input', function () {
+        this.style.borderColor = '';
+      });
+    }
+  </script>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">
-    <h1>VIF<span style="color: #42a5f5;">&#9679;</span></h1>
-    <p>Welcome to the Virtual International Conference</p>
-    <button class="button join-btn" id="join-button" onclick="redirectToRoom()">Join Room</button>
-    <input type="text" id="room-code" class="input-field" placeholder="Enter room code" />
-    <button class="button search-btn" onclick="window.location.href='/rooms?sort=time-desc';">Search Room</button>
+  <div class="container">
+    <div class="header">
+      <h1>VIF<span style="color: #42a5f5;">&#9679;</span></h1>
+      <p>Welcome to the Virtual International Conference</p>
+      <button class="button join-btn" id="join-button" onclick="redirectToRoom()">Join Room</button>
+      <input type="text" id="room-code" class="input-field" placeholder="Enter room code" />
+      <button class="button search-btn" onclick="window.location.href='/rooms?sort=time-desc';">Search Room</button>
+    </div>
   </div>
-</div>
 
-<div class="footer">
-  <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
-</div>
-
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p id="modal-text">Room does not exist</p>
+  <div class="footer">
+    <button id="end-session-button" style="visibility: hidden; background-color: lightcoral;">End Session</button>
+    <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
   </div>
-</div>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modal-text">Room does not exist</p>
+    </div>
+  </div>
+
+  <script src="/src/admin-footer.js">
+  </script>
 </body>
+
 </html>
