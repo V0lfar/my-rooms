@@ -29,6 +29,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/public/login.html');
 });
 
+app.get('/roomdetails', (req, res) => {
+  res.sendFile(__dirname + '/public/roomdetails.html');
+});
+
 app.get('/error', (req, res) => {
   res.sendFile(__dirname + '/public/errors/500.html');
 });

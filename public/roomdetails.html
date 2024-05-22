@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIF</title>
+  <link rel="stylesheet" type="text/css" href="/base.css">
+</head>
+
+<body>
+  <div class="top-bar">
+    <button class="back-btn" onclick="window.location.href='/rooms?sort=time-desc';">Rooms</button>
+  </div>
+
+  <div class="container-room">
+    <div class="header">
+      <h1 id="page-title">Creating a room</h1>
+      <input type="text" id="room-title" placeholder="Room title" required />
+      <div id="file-upload-area">
+        <label for="room-monitors" class="file-upload-label">Upload PDF</label>
+        <input type="file" id="room-monitors" class="input-field" accept=".pdf" multiple required />
+      </div>
+      <div id="uploaded-files-area">
+        <h2>PDFs</h2>
+        <ul id="uploaded-files"></ul>
+      </div>
+      <div class="button-container">
+        <button id="delete-button">Delete</button>
+        <div>
+          <button id="refresh-button">Refresh</button>
+          <button id="save-button">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button id="end-session-button" style="visibility: hidden; background-color: lightcoral;">End Session</button>
+    <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
+  </div>
+
+  <script type="module">
+    document.getElementById('room-monitors').addEventListener('change', function(event) {
+        const uploadedFiles = document.getElementById('uploaded-files');
+      
+        // Add each uploaded file to the list
+        for (const file of event.target.files) {
+          const fileItem = document.createElement('li');
+          fileItem.className = 'uploaded-file';
+      
+          const fileName = document.createElement('span');
+          fileName.textContent = file.name;
+          fileItem.appendChild(fileName);
+      
+          const removeFileButton = document.createElement('button');
+          removeFileButton.className = 'remove-file-button';
+          removeFileButton.textContent = 'Remove';
+          removeFileButton.onclick = function() {
+            uploadedFiles.removeChild(fileItem);
+          };
+          fileItem.appendChild(removeFileButton);
+      
+          uploadedFiles.appendChild(fileItem);
+        }
+      });  
+  </script>
+  <script src="/src/admin-footer.js">
+  </script>
+</body>
+
+</html>
