@@ -472,7 +472,8 @@ option {
 .button-container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-top: auto;
+  margin-bottom: 10px;
 }
 
 #delete-button {
@@ -496,4 +497,20 @@ option {
 #refresh-button {
   margin-right: 5px;
   background-color: #cdaa54;
+}
+
+.inner-container-room {
+  width: 30%;
+  padding: 20px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: auto;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.container-room-title {
+  margin-top: 0px;
 }
