@@ -45,29 +45,76 @@
   </div>
 
   <script type="module">
-    document.getElementById('room-monitors').addEventListener('change', function(event) {
-        const uploadedFiles = document.getElementById('uploaded-files');
-      
-        // Add each uploaded file to the list
-        for (const file of event.target.files) {
-          const fileItem = document.createElement('li');
-          fileItem.className = 'uploaded-file';
-      
-          const fileName = document.createElement('span');
-          fileName.textContent = file.name;
-          fileItem.appendChild(fileName);
-      
-          const removeFileButton = document.createElement('button');
-          removeFileButton.className = 'remove-file-button';
-          removeFileButton.textContent = 'Remove';
-          removeFileButton.onclick = function() {
-            uploadedFiles.removeChild(fileItem);
-          };
-          fileItem.appendChild(removeFileButton);
-      
-          uploadedFiles.appendChild(fileItem);
-        }
-      });  
+    document.getElementById('room-monitors').addEventListener('change', function (event) {
+      const uploadedFiles = document.getElementById('uploaded-files');
+
+      // Add each uploaded file to the list
+      for (const file of event.target.files) {
+        const fileItem = document.createElement('li');
+        fileItem.className = 'uploaded-file';
+
+        const fileName = document.createElement('span');
+        fileName.textContent = file.name;
+        fileItem.appendChild(fileName);
+
+        const removeFileButton = document.createElement('button');
+        removeFileButton.className = 'remove-file-button';
+        removeFileButton.textContent = 'Remove';
+        removeFileButton.onclick = function () {
+          uploadedFiles.removeChild(fileItem);
+        };
+        fileItem.appendChild(removeFileButton);
+
+        uploadedFiles.appendChild(fileItem);
+      }
+    });
+
+    document.getElementById('save-button').addEventListener('click', function () {
+      const title = document.getElementById('room-title').value;
+      const files = document.getElementById('room-monitors').files;
+      const monitors = [];
+
+      const username = sessionStorage.getItem('username');
+      const password = sessionStorage.getItem('password');
+      const auth = 'Basic ' + btoa(username + ':' + password);
+
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          monitors.push({
+            fileName: file.name,
+            file: event.target.result.split(',')[1] // Remove the data URL prefix
+          });
+
+          if (monitors.length === files.length) {
+            // All files have been read, send the POST request
+            fetch('http://localhost:8080/rooms', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': auth
+              },
+              body: JSON.stringify({
+                title: title,
+                monitors: monitors
+              })
+            })
+              .then(response => {
+                if (response.status === 200) {
+                  // If the request was successful, redirect to the rooms page
+                  window.location.href = '/rooms?sort=time-desc';
+                } else {
+                  // If the request failed, show an error message
+                  response.text().then(errorMessage => {
+                    alert('Failed to create room: ' + errorMessage);
+                  });
+                }
+              });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
   </script>
   <script src="/src/admin-buttons.js">
   </script>

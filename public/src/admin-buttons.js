@@ -2,13 +2,20 @@
     const newRoomButton = document.getElementById('new-room-button');
 
     if (sessionStorage.getItem('username') && sessionStorage.getItem('password')) {
-      endSessionButton.style.visibility = 'visible';
-      newRoomButton.style.visibility = 'visible';
+      if (endSessionButton) {
+        endSessionButton.style.visibility = 'visible';
+      }
+      if (newRoomButton) {
+        newRoomButton.style.visibility = 'visible';
+      }
     } else {
-      endSessionButton.style.visibility = 'hidden';
-      newRoomButton.style.visibility = 'hidden';
+      if (endSessionButton) {
+        endSessionButton.style.visibility = 'hidden';
+      }
+      if (newRoomButton) {
+        newRoomButton.style.visibility = 'hidden';
+      }
     }
-
     endSessionButton.addEventListener('click', function () {
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('password');
