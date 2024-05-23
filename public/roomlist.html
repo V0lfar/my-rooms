@@ -39,7 +39,10 @@
 
 <body>
   <div class="top-bar">
-    <button class="back-btn" onclick="window.location.href='/';">Homepage</button>
+    <div class="top-bar-left"> 
+      <button class="back-btn" onclick="window.location.href='/';">Homepage</button>
+      <button class="new-room-btn" id="new-room-button" onclick="window.location.href='/roomdetails';">New Room</button>
+    </div>
     <div class="search-sort-bar">
       <input type="text" class="search-input" placeholder="Search rooms..." id="search-query">
       <select class="sort-dropdown" id="sort-option">
@@ -60,7 +63,7 @@
     <p>&copy; 2024 Vladyslav Mudrud. All rights reserved.</p>
   </div>
 
-  <script src="/src/admin-footer.js">
+  <script src="/src/admin-buttons.js">
   </script>
 </body>
 

@@ -37,24 +37,14 @@ export async function loadRooms(url) {
 
         if (sessionStorage.getItem('username') && sessionStorage.getItem('password')) {
 
-          const editButton = document.createElement('button');
-          editButton.className = 'edit-button';
-          editButton.onclick = (event) => {
-            event.stopPropagation();
-            // Add your code to remove the room here
-          };
-          roomTile.appendChild(editButton);
-
           const removeButton = document.createElement('button');
           removeButton.className = 'remove-button';
           removeButton.onclick = (event) => {
-            event.stopPropagation(); // Prevent triggering the roomTile's onclick handler
+            event.stopPropagation();
       
-            // Get the username and password from the session
             const username = sessionStorage.getItem('username');
             const password = sessionStorage.getItem('password');
       
-            // Make the API call
             fetch(`http://localhost:8080/rooms/${room.code}`, {
               method: 'DELETE',
               headers: {
@@ -63,15 +53,12 @@ export async function loadRooms(url) {
             })
             .then(response => {
               if (!response.ok) {
-                // If the response status is not OK, throw an error
                 throw new Error('Network response was not ok');
               }
       
-              // If the remove was successful, refresh the current page
               window.location.reload();
             })
             .catch(error => {
-              // If there was an error, redirect to the 500 error page
               console.error('Error:', error);
               window.location.href = '/error';
             });

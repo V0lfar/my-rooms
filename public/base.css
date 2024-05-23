@@ -115,13 +115,23 @@ option {
   background-color: #f0f0f0;
 }
 
-.back-btn {
+.top-bar-left {
+  display: flex;
+  align-items: center;
+}
+
+.back-btn, .new-room-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   background-color: #42a5f5;
   color: white;
+}
+
+.new-room-btn {
+  margin: auto 10px auto 10px;
+  visibility: hidden;
 }
 
 .back-to-main-btn {
@@ -257,7 +267,7 @@ option {
 
 .remove-button {
   position: absolute;
-  top: 90px;
+  top: 50px;
   right: 10px;
   background-color: lightcoral;
   border: none;
@@ -287,7 +297,7 @@ option {
 
 .edit-button {
   position: absolute;
-  top: 50px;
+  top: 90px;
   right: 10px;
   background-color: #cdaa54;
   border: none;
@@ -406,7 +416,7 @@ option {
   display: block;
   width: 100%;
   padding: 10px 20px;
-  margin: 10px auto;
+  margin: 20px auto 10px auto;
   border: 2px solid #5c6bc0;
   border-radius: 5px;
   font-size: 16px;
@@ -415,7 +425,8 @@ option {
 }
 
 #file-upload-area {
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 5px;
   text-align: center;
 }
 
@@ -472,8 +483,7 @@ option {
 .button-container {
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
-  margin-bottom: 10px;
+  margin-top: 40px;
 }
 
 #delete-button {
@@ -503,7 +513,7 @@ option {
   width: 30%;
   padding: 20px;
   padding-bottom: 10px;
-  margin-top: 20px;
+  margin-top: 50px;
   margin-bottom: auto;
   background-color: #f0f0f0;
   border-radius: 10px;

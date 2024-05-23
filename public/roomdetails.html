@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VIF</title>
   <link rel="stylesheet" type="text/css" href="/base.css">
+  <script>
+    if (!sessionStorage.getItem('username') || !sessionStorage.getItem('password')) {
+      window.location.href = '/notfound';
+    }
+  </script>
 </head>
 
 <body>
@@ -26,9 +31,8 @@
         <ul id="uploaded-files"></ul>
       </div>
       <div class="button-container">
-        <button id="delete-button">Delete</button>
+        <button id="refresh-button">Refresh</button>
         <div>
-          <button id="refresh-button">Refresh</button>
           <button id="save-button">Save</button>
         </div>
       </div>
@@ -65,7 +69,7 @@
         }
       });  
   </script>
-  <script src="/src/admin-footer.js">
+  <script src="/src/admin-buttons.js">
   </script>
 </body>
 
