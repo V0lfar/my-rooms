@@ -45,11 +45,15 @@
   </div>
 
   <script type="module">
-    document.getElementById('room-monitors').addEventListener('change', function (event) {
-      const uploadedFiles = document.getElementById('uploaded-files');
+    let uploadedFiles = []; // Array to store all uploaded files
 
-      // Add each uploaded file to the list
+    document.getElementById('room-monitors').addEventListener('change', function (event) {
+      const uploadedFilesList = document.getElementById('uploaded-files');
+
+      // Add each uploaded file to the list and the array
       for (const file of event.target.files) {
+        uploadedFiles.push(file); // Add the file to the array
+
         const fileItem = document.createElement('li');
         fileItem.className = 'uploaded-file';
 
@@ -61,24 +65,39 @@
         removeFileButton.className = 'remove-file-button';
         removeFileButton.textContent = 'Remove';
         removeFileButton.onclick = function () {
-          uploadedFiles.removeChild(fileItem);
+          uploadedFilesList.removeChild(fileItem);
+          const index = uploadedFiles.indexOf(file);
+          if (index > -1) {
+            uploadedFiles.splice(index, 1); // Remove the file from the array
+          }
         };
         fileItem.appendChild(removeFileButton);
 
-        uploadedFiles.appendChild(fileItem);
+        uploadedFilesList.appendChild(fileItem);
       }
     });
 
-    document.getElementById('save-button').addEventListener('click', function () {
+    document.getElementById('save-button').addEventListener('click', function () {    
+      const titleInput = document.getElementById('room-title');
       const title = document.getElementById('room-title').value;
-      const files = document.getElementById('room-monitors').files;
+
+      if (!title) {
+        titleInput.style.borderColor = 'lightcoral';
+        return;
+      }
+
+      if (uploadedFiles.length === 0) {
+        document.getElementById('uploaded-files-area').style.borderColor = 'lightcoral';
+        return;
+      }
+
       const monitors = [];
 
       const username = sessionStorage.getItem('username');
       const password = sessionStorage.getItem('password');
       const auth = 'Basic ' + btoa(username + ':' + password);
 
-      for (const file of files) {
+      for (const file of uploadedFiles) {
         const reader = new FileReader();
         reader.onload = function (event) {
           monitors.push({
@@ -86,7 +105,7 @@
             file: event.target.result.split(',')[1] // Remove the data URL prefix
           });
 
-          if (monitors.length === files.length) {
+          if (monitors.length === uploadedFiles.length) {
             // All files have been read, send the POST request
             fetch('http://localhost:8080/rooms', {
               method: 'POST',
@@ -114,6 +133,18 @@
         };
         reader.readAsDataURL(file);
       }
+    });
+
+    document.getElementById('room-title').addEventListener('input', function () {
+      this.style.borderColor = '';
+    });
+
+    document.getElementById('room-monitors').addEventListener('change', function () {
+      document.getElementById('uploaded-files-area').style.borderColor = '';
+    });
+
+    document.getElementById('refresh-button').addEventListener('click', function () {
+      location.reload();
     });
   </script>
   <script src="/src/admin-buttons.js">
