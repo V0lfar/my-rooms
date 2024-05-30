@@ -10,9 +10,9 @@ import { mesh_rigid_body } from './mesh-rigid-body.js';
 
 import { getDocument } from '../node_modules/pdfjs-dist/build/pdf.mjs';
 
-export const level_1_builder = (() => {
+export const level_builder = (() => {
 
-  class Level1Builder extends entity.Component {
+  class LevelBuilder extends entity.Component {
     constructor(params) {
       super();
 
@@ -494,7 +494,7 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
 
 
   return {
-    Level1Builder: Level1Builder
+    LevelBuilder: LevelBuilder
   };
 
 })();

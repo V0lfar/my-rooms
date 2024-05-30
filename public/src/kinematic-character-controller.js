@@ -56,8 +56,8 @@ export const kinematic_character_controller = (() => {
     // UpdateTranslation_(timeElapsedS) {
     //   const input = this.GetComponent('PlayerInput');
 
-    //   const forwardVelocity = (input.key(player_input.KEYS.w) ? 1 : 0) + (input.key(player_input.KEYS.s) ? -1 : 0)
-    //   const strafeVelocity = (input.key(player_input.KEYS.a) ? 1 : 0) + (input.key(player_input.KEYS.d) ? -1 : 0)
+    //   const forwardVelocity = (input.key(user_input.KEYS.w) ? 1 : 0) + (input.key(user_input.KEYS.s) ? -1 : 0)
+    //   const strafeVelocity = (input.key(user_input.KEYS.a) ? 1 : 0) + (input.key(user_input.KEYS.d) ? -1 : 0)
     // }
   };
 

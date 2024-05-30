@@ -1,5 +1,4 @@
 export async function login(name, inputPassword) {
-    // Hash the password
     const password = await hashPassword(inputPassword);
 
     return new Promise((resolve, reject) => {
@@ -13,7 +12,6 @@ export async function login(name, inputPassword) {
             .then(response => response.json())
             .then(data => {
                 if (data === true) {
-                    // The credentials are correct, store them in the session
                     sessionStorage.setItem('username', name);
                     sessionStorage.setItem('password', password);
                     resolve();

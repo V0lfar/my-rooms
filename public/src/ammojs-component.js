@@ -4,7 +4,6 @@ import {entity} from './entity.js';
 
 export const ammojs_component = (() => {
 
-  // https://pybullet.org/Bullet/BulletFull/btCollisionObject_8h_source.html#l00131
   const flags = {
     CF_STATIC_OBJECT: 1,
     CF_KINEMATIC_OBJECT: 2,

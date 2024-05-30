@@ -11,9 +11,7 @@ export const basic_rigid_body = (() => {
       this.params_ = params;
     }
 
-    Destroy() {
-      //this.FindEntity('physics').GetComponent('AmmoJSController').RemoveRigidBody(this.body_);
-    }
+    Destroy() {}
 
     InitEntity() {
       const pos = this.Parent.Position;

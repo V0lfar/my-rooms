@@ -2,7 +2,7 @@ import {THREE, FBXLoader} from './three-defs.js';
 
 import {entity} from './entity.js';
 import {finite_state_machine} from './finite-state-machine.js';
-import {player_state} from './player-state.js';
+import {user_state} from './user-state.js';
 
 export const target_entity = (() => {
 
@@ -17,10 +17,10 @@ export const target_entity = (() => {
     }
   
     Init_() {
-      this._AddState('idle', player_state.IdleState);
-      this._AddState('run', player_state.RunState);
-      this._AddState('death', player_state.DeathState);
-      this._AddState('shoot', player_state.AttackState);
+      this._AddState('idle', user_state.IdleState);
+      this._AddState('run', user_state.RunState);
+      this._AddState('death', user_state.DeathState);
+      this._AddState('shoot', user_state.AttackState);
     }
   };
   

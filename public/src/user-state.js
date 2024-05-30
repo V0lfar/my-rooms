@@ -1,7 +1,7 @@
 import {THREE} from './three-defs.js';
 
 
-export const player_state = (() => {
+export const user_state = (() => {
 
   class State {
     constructor(parent) {

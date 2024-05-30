@@ -67,11 +67,11 @@ class QuickFPS1 {
 
     const spawner = new entity.Entity();
     spawner.AddComponent(new spawners.PlayerSpawner(basicParams));
-    spawner.AddComponent(new spawners.Level1Spawner(basicParams));
+    spawner.AddComponent(new spawners.LevelSpawner(basicParams));
     this.entityManager_.Add(spawner, 'spawners');
 
     spawner.GetComponent('PlayerSpawner').Spawn();
-    spawner.GetComponent('Level1Spawner').Spawn();
+    spawner.GetComponent('LevelSpawner').Spawn();
   }
 
   RAF_() {

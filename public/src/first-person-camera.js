@@ -3,7 +3,7 @@ import {THREE} from './three-defs.js';
 import {entity} from './entity.js';
 import {math} from './math.js';
 
-import {player_input} from './player-input.js';
+import {user_input} from './user-input.js';
 import {passes} from './passes.js';
 
 
@@ -97,8 +97,8 @@ export const first_person_camera = (() => {
     updateTranslation_(timeElapsedS) {
       const input = this.GetComponent('PlayerInput');
 
-      const forwardVelocity = (input.key(player_input.KEYS.w) ? 1 : 0) + (input.key(player_input.KEYS.s) ? -1 : 0)
-      const strafeVelocity = (input.key(player_input.KEYS.a) ? 1 : 0) + (input.key(player_input.KEYS.d) ? -1 : 0)
+      const forwardVelocity = (input.key(user_input.KEYS.w) ? 1 : 0) + (input.key(user_input.KEYS.s) ? -1 : 0)
+      const strafeVelocity = (input.key(user_input.KEYS.a) ? 1 : 0) + (input.key(user_input.KEYS.d) ? -1 : 0)
 
       const qx = new THREE.Quaternion();
       qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.phi_);
@@ -126,12 +126,12 @@ export const first_person_camera = (() => {
       // this.translation_.add(forward);
       // this.translation_.add(left);
   
-      if (input.key(player_input.KEYS.SPACE)) {
+      if (input.key(user_input.KEYS.SPACE)) {
         this.headBobActive_ = false;
         this.Parent.Attributes.Physics.CharacterController.jump();
       }
 
-      if (input.key(player_input.KEYS.SHIFT_L)) {
+      if (input.key(user_input.KEYS.SHIFT_L)) {
         this.powerUp_(true);
       } else {
         this.powerUp_(false);
