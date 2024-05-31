@@ -6,7 +6,7 @@ const port = 3000;
 
 const corsOptions = {
   credentials: true,
-  origin: ['http://localhost:3000', 'http://localhost:8080'] // Whitelist the domains you want to allow
+  origin: ['http://localhost:3000', 'http://localhost:8080']
 };
 
 app.use(cors(corsOptions));
